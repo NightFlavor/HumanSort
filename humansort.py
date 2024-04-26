@@ -26,23 +26,27 @@ while True:
         file_name = input("Provide name of text file: ")
         file = open(f"{file_name}.txt", "r")
         all_items = file.readlines()
+        random.shuffle(all_items)
         file.close()
         break
     elif int(user_choice) == 2:
         all_items = ask_user_for_items()   
+        random.shuffle(all_items)
         break
-    
+used_combinations = []
 while True:
     hasswaped=False
     for i in range(0, len(all_items), 1):
         item1 = all_items[i]
         if i != len(all_items)-1:
             item2 = all_items[i+1]
-            if better(item1, item2):
-                all_items[i] = item2
-                all_items[i+1] = item1
-                hasswaped=True
-                print("should have swapped items")
+            if [item1,item2] not in used_combinations and [item2,item1] not in used_combinations:
+                used_combinations.append([item1,item2])
+                print(used_combinations)
+                if better(item1, item2):
+                    all_items[i] = item2
+                    all_items[i+1] = item1
+                    hasswaped=True
     
     if not hasswaped:
         break
