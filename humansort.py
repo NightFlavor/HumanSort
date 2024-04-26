@@ -8,17 +8,13 @@ def ask_user_for_items():
         else:
             all_items.append(user_input)
 
-def better(a, b):
-    print(a)
-    print(b)
+def better(item1, item2):
     try:
-        user_choice = int(input("Choose item 1 or 2: "))
-    except:
-        print("Please enter correct value")
-    if user_choice == a or user_choice == 1:
-        return False
-    elif user_choice == b or user_choice == 2: 
-        return True
+        user_choice = int(input(f"Choose item 1 or 2\n 1: {item1}\n 2: {item2}: \n"))
+    except ValueError:
+        print("Please enter a correct value.")
+        better(item1,item2)
+    return user_choice == 2
 
 while True:
     user_choice = input("1. File mode 2. Manual mode")
@@ -26,36 +22,29 @@ while True:
         file_name = input("Provide name of text file: ")
         file = open(f"{file_name}.txt", "r")
         all_items = file.readlines()
-        random.shuffle(all_items)
         file.close()
         break
     elif int(user_choice) == 2:
         all_items = ask_user_for_items()   
-        random.shuffle(all_items)
         break
+
+random.shuffle(all_items)
+all_items = [item.strip() for item in all_items]
 used_combinations = []
+
 while True:
-    hasswaped=False
-    for i in range(0, len(all_items), 1):
-        item1 = all_items[i]
+    has_swaped=False
+    for i in range(0, len(all_items)):
         if i != len(all_items)-1:
+            item1 = all_items[i]
             item2 = all_items[i+1]
             if [item1,item2] not in used_combinations and [item2,item1] not in used_combinations:
-                used_combinations.append([item1,item2])
-                print(used_combinations)
                 if better(item1, item2):
-                    all_items[i] = item2
-                    all_items[i+1] = item1
-                    hasswaped=True
-    
-    if not hasswaped:
+                    all_items[i],all_items[i+1] = item2,item1
+                    has_swaped=True
+                used_combinations.append([item1,item2])
+    if not has_swaped:
         break
 
-
-file = open("mijn.txt", "r")
-file.readlines()
-file.close()
-
-for i in range(0, len(all_items), 1):
-    print(i+1,": ",all_items[i])
-
+for i, item in enumerate(all_items, start=1):
+    print(f"{i}: {item}")
